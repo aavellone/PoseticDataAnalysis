@@ -1,0 +1,18 @@
+# Files to include in the source distribution (sdist). The C/C++ sources under
+# src/ MUST be shipped so the extension can be compiled on the target machine.
+include README.md
+include LICENSE
+include pyproject.toml
+include setup.py
+
+# C++20 core (shared with the R package) and the CPython C-API binding.
+recursive-include src *.h *.cpp
+
+# Tests (handy for users building from source).
+recursive-include tests *.py
+
+# Exclude build artifacts that must never end up in the sdist.
+global-exclude *.o
+global-exclude *.so
+global-exclude *.pyc
+prune build
