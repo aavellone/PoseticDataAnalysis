@@ -33,26 +33,22 @@ jobs:
         uses: actions/checkout@v4
 
       # QEMU to cross-build Linux ARM64 (aarch64) wheels.
-      - name: Set up QEMU
-        if: runner.os == 'Linux'
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: all
-
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.0
         with:
           package-dir: python
         env:
           CIBW_BUILD: "cp39-* cp310-* cp311-* cp312-* cp313-*"
-          CIBW_ARCHS_LINUX: "x86_64 aarch64"
+          # Linux aarch64 is intentionally NOT built here: under QEMU emulation
+          # this C++20 project takes 1-2h per release. ARM Linux users install
+          # from the sdist. (A native ARM runner can be added later if wanted.)
+          CIBW_ARCHS_LINUX: "x86_64"
           CIBW_ARCHS_MACOS: "x86_64 arm64"
           CIBW_ARCHS_WINDOWS: "AMD64"
           CIBW_SKIP: "*-win32 *-manylinux_i686 *-musllinux*"
 
           # Linux: GCC 13 for <format> / std::jthread and C++20.
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
-          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
           CIBW_BEFORE_ALL_LINUX: >
             dnf install -y gcc-toolset-13-gcc gcc-toolset-13-gcc-c++
           CIBW_ENVIRONMENT_LINUX: >
