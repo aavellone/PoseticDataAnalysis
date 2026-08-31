@@ -97,7 +97,7 @@ from ._cran_api import (
     BubleyDyerEvaluation,
 )
 
-__version__ = "1.1.2"
+__version__ = "1.1.3"
 
 # Exactly the exported functions of the CRAN R package (plus __version__).
 __all__ = [
